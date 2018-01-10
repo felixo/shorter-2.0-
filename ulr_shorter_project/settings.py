@@ -120,3 +120,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 SITE_URL = '127.0.0.1:8000'
+
+LENGTH = 6
