@@ -23,7 +23,7 @@ def redirect_original(request, short_id):
 def shorten_url(request):
     url = request.POST.get("url", '')
     if url:
-        short_id = get_short_code()
+        short_id = get_short_code(url)
         b = Urls(httpurl=url, short_id=short_id)
         b.save()
         response_data = {}
@@ -32,11 +32,9 @@ def shorten_url(request):
     return HttpResponse(json.dumps({"Error": "Sorry, We can't get your URL"}), content_type="application/json")
 
 
-def get_short_code():
-    hash = hashlib.md5()
-    # if the randomly generated short_id is used then generate next
+def get_short_code(url):
     while True:
-        short_id = ''.join(random.choice(hash.hexdigest()) for x in range(settings.LENGTH))
+        short_id = ''.join(hashlib.md5(url.encode('utf-8')).hexdigest()[:settings.LENGTH])
         try:
             temp = Urls.objects.get(pk=short_id)
         except:
